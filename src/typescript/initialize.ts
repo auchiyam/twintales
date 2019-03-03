@@ -2,8 +2,13 @@ import { State } from "./state"
 
 function get_resolution() {
     // get the resolution of the current browser window
-    let width = 0;
-    let height = 0;
+    let width = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+
+    let height = window.innerHeight
+    || document.documentElement.clientHeight
+    || document.body.clientHeight;
 
     // Calculate the largest 16:9 canvas that can be made from the resolution with some padding in mind
     let ratio = 16/9;
@@ -12,11 +17,13 @@ function get_resolution() {
 
     // the current window's width is bigger than the desired width
     if (ratio > width / height) {
-
+        canv_height = height;
+        canv_width = height * (16/9);
     }
     // the current window's height is bigger than the desired height
     else if (ratio < width / height) {
-
+        canv_width = width;
+        canv_height = height * (9/16);
     }
     // the current window is exactly 16:9
     else {
@@ -28,7 +35,7 @@ function get_resolution() {
     return { width: canv_width, height: canv_height }
 }
 
-// create a 
+// create a canvas and add it to the index.html
 export function initialize() {
     // figure out the resolution
     let resolution = get_resolution();
@@ -38,7 +45,18 @@ export function initialize() {
 
     canvas.width = resolution.width;
     canvas.height = resolution.height;
+
     canvas.id = "game_canvas"
+
+    //create a handler for resizing
+    document.addEventListener("resize", function() {
+        let resolution = get_resolution();
+
+        canvas.width = resolution.width;
+        canvas.height = resolution.height;
+
+        canvas.id = "game_canvas"
+    })
 
     document.body.appendChild(canvas);
 
