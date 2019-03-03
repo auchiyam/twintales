@@ -3,7 +3,7 @@
         "outDir": "bin/js"
     },
     "include": [
-        "src/**/*"
+        "src/typescript/**/*"
     ],
     "exclude": [
         "src/html/**/*"
