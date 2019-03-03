@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "outDir": "bin/js"
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "src/html/**/*"
+    ]
+}
