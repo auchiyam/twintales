@@ -10,20 +10,24 @@ function get_resolution() {
     || document.documentElement.clientHeight
     || document.body.clientHeight;
 
+    // make sure they're in double format for decimals
+    width *= 1.0;
+    height *= 1.0;
+
     // Calculate the largest 16:9 canvas that can be made from the resolution with some padding in mind
-    let ratio = 16/9;
+    let ratio = 16.0/9.0;
     let canv_width = 0;
     let canv_height = 0;
 
     // the current window's width is bigger than the desired width
-    if (ratio > width / height) {
+    if (ratio < width / height) {
         canv_height = height;
         canv_width = height * (16/9);
     }
     // the current window's height is bigger than the desired height
-    else if (ratio < width / height) {
+    else if (ratio > width / height) {
         canv_width = width;
-        canv_height = height * (9/16);
+        canv_height = width * (9/16);
     }
     // the current window is exactly 16:9
     else {
@@ -35,28 +39,26 @@ function get_resolution() {
     return { width: canv_width, height: canv_height }
 }
 
-// create a canvas and add it to the index.html
-export function initialize() {
-    // figure out the resolution
+function resize_canvas(cv: HTMLCanvasElement) {
     let resolution = get_resolution();
 
+    cv.width = resolution.width;
+    cv.height = resolution.height;
+}
+
+// create a canvas and add it to the index.html
+export function initialize() {
     // initialize the canvas
     var canvas = document.createElement("canvas");
 
-    canvas.width = resolution.width;
-    canvas.height = resolution.height;
+    canvas.style.setProperty('background-color', '#eee');
+
+    resize_canvas(canvas);
 
     canvas.id = "game_canvas"
 
     //create a handler for resizing
-    document.addEventListener("resize", function() {
-        let resolution = get_resolution();
-
-        canvas.width = resolution.width;
-        canvas.height = resolution.height;
-
-        canvas.id = "game_canvas"
-    })
+    window.addEventListener("resize", function() { resize_canvas(<HTMLCanvasElement> document.getElementById("game_canvas")) })
 
     document.body.appendChild(canvas);
 

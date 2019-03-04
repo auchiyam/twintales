@@ -6,3 +6,7 @@ export enum State {
     PracticeStages,     // The practice stage has been selected, and the practice stage sequence should be displayed
     Option,             // The option has been selected, and the option should be displayed
 }
+
+export function initialize_states() {
+
+}
