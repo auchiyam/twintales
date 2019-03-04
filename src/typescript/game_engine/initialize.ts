@@ -62,6 +62,5 @@ export function initialize() {
 
     document.body.appendChild(canvas);
 
-    // the initialization is complete, proceed to loading
-    return State.Loading;
+    return canvas;
 }
