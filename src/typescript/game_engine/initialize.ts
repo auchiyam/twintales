@@ -49,7 +49,7 @@ function resize_canvas(cv: HTMLCanvasElement) {
 // create a canvas and add it to the index.html
 export function initialize() {
     // initialize the canvas
-    var canvas = document.createElement("canvas");
+    let canvas = document.createElement("canvas");
 
     canvas.style.setProperty('background-color', '#eee');
 
