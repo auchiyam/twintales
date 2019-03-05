@@ -1,3 +1,5 @@
+import { GameImage } from './image'
+
 export enum State {
     Initialize,         // Draw the canvas and start the game
     TitleScreen,        // The initial state of the game
@@ -8,15 +10,16 @@ export enum State {
 
 export class GameState {
     readonly start_time: number;
-    readonly canvas: HTMLCanvasElement;
     readonly context: CanvasRenderingContext2D;
 
     time: number;
+    images: GameImage[][]
 
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(readonly canvas: HTMLCanvasElement) {
         this.start_time = Date.now();
         this.time = 0;
-        this.canvas = canvas;
-        this.context = <CanvasRenderingContext2D> canvas.getContext("2D");
+        this.context = <CanvasRenderingContext2D> canvas.getContext("2d");
+
+        this.images = [];
     }
 }

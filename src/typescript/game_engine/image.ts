@@ -1,12 +1,12 @@
 // Image class is the abstract class for all images that will be used
 // Important to note that image will only be drawn if there's any pending actions for the image.  Meaning if the image wasn't doing anything, it won't appear on the screen.
-export abstract class Image {
+export abstract class GameImage {
     readonly actions: Array<Action>
 
     constructor() {
         this.actions = [];
     }
-    abstract draw(time: number): void;
+    abstract draw(time: number, ctx: CanvasRenderingContext2D, scale: number): void;
     
     // Commands for the images, based on osu storyboard commands
     // https://osu.ppy.sh/help/wiki/Storyboard_Scripting/Commands
@@ -31,131 +31,587 @@ export abstract class Image {
     move(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(2, ActionType.Move, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Move" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     fade(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.Fade, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Fade" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     scale(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.Scale, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     rotate(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.Rotate, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 6) === "Rotate" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     color(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(3, ActionType.Color, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Color" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     move_x(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.MoveX, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Move" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     move_y(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.MoveY, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Move" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     vector(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(2, ActionType.Vector, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     vector_x(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.VectorX, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     vector_y(...args: Array<number | Ease | ((t: number) => number)>) {
         let act: Action = this.make_actions(1, ActionType.VectorY, args);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     movef(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        if (ease != Ease.Custom) {
+        let act: Action = new Action(ActionType.MoveF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Move" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
         }
-
-        let act: Action = new Action(ActionType.MoveF, ease, start_time, end_time, undefined, undefined, func);
-
-        this.actions.push(act);
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    fadef(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.FadeF, ease, start_time, end_time, undefined, undefined, func);
+    fadef(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.FadeF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Fade" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    scalef(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.ScaleF, ease, start_time, end_time, undefined, undefined, func);
+    scalef(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.ScaleF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    rotatef(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.RotateF, ease, start_time, end_time, undefined, undefined, func);
+    rotatef(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.RotateF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 6) === "Rotate" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    colorf(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.ColorF, ease, start_time, end_time, undefined, undefined, func);
+    colorf(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.ColorF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Color" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    move_xf(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.MoveXF, ease, start_time, end_time, undefined, undefined, func);
+    move_xf(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.MoveXF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Move" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    move_yf(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.MoveYF, ease, start_time, end_time, undefined, undefined, func);
+    move_yf(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.MoveYF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 4) === "Move" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    vectorf(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.VectorF, ease, start_time, end_time, undefined, undefined, func);
+    vectorf(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.VectorF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    vector_xf(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.VectorXF, ease, start_time, end_time, undefined, undefined, func);
+    vector_xf(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.VectorXF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
-    vector_yf(ease: Ease = Ease.Linear, start_time: number, end_time: number, func: (t: number) => Array<number>) {
-        let act: Action = new Action(ActionType.VectorYF, ease, start_time, end_time, undefined, undefined, func);
+    vector_yf(ease: Ease = Ease.Linear, ease_function: (t: number) => number = EaseFunction.get_func(ease), start_time: number, end_time: number, func: (t: number) => Array<number>) {
+        let act: Action = new Action(ActionType.VectorYF, ease, start_time, end_time, undefined, undefined, func, ease_function);
 
-        this.actions.push(act);
+        // get all actions relating to this function
+        let relevant_action = this.actions.filter((val) => { val.type.toString().substring(0, 5) === "Scale" || val.type.toString().substring(0, 6) === "Vector" })
+
+        // see if the new action happens while other actions of the similar command are working
+        relevant_action.forEach((val) => {
+            let a0 = val.start_time, a1 = val.end_time, b0 = act.start_time, b1 = act.end_time;
+            // found intersection
+            if (!(b0 > a1 || a0 > b1)) {
+                new Error("Invalid time input.  There are already move action in this time interval")
+            }
+        })
+
+        // add it to the spot that does not break the order of the array, which is sorted by the starting time
+        let added: boolean = false;
+        for (let i = 0; i < this.actions.length; i++) {
+            if (act.start_time < this.actions[i].start_time) {
+                added = true;
+                this.actions.splice(i, 0, act)
+                break;
+            }
+        }
+        if (!added) {
+            this.actions.push(act);
+        }
     }
 
     private make_actions(num_args: number, type: ActionType, arg: Array<number | Ease | ((t: number) => number)>) {
-        let start_time: number = -1, end_time: number = -1, start_val: Array<number> = [], end_val: Array<number> = [], ease: Ease = Ease.Linear, ease_function: (t: number) => number;
+        let start_time: number = -1, end_time: number = -1, start_val: Array<number> = [], end_val: Array<number> = [], ease: Ease = Ease.Linear, ease_function: ((t: number) => number) | undefined = undefined;
 
-        if (arg.length == (1 + num_args)) {
+        if (arg.length === (1 + num_args)) {
             start_time = <number> arg[0];
             end_time = start_time;
 
@@ -165,7 +621,7 @@ export abstract class Image {
             end_val = start_val;
         }
 
-        else if (arg.length == (2 + num_args * 2)) {
+        else if (arg.length === (2 + num_args * 2)) {
             start_time = <number> arg[0];
             end_time = <number> arg[1];
 
@@ -178,11 +634,11 @@ export abstract class Image {
             }
         }
 
-        else if (arg.length == (3 + num_args * 2)) {
+        else if (arg.length === (3 + num_args * 2)) {
             ease = <Ease> arg[0];
             let offset = 0;
 
-            if (ease == Ease.Custom) {
+            if (ease === Ease.Custom) {
                 offset += 1;
                 ease_function = <(t: number) => number> arg[1]
             }
@@ -203,32 +659,137 @@ export abstract class Image {
 
         else {
             // Argument error
-            let error_msg = "found ${num_args} arguments, but expected ${1+num_args}, ${2+num_args*2}, ${3+num_args*2 + offset}, or ${3+num_args*2 + 1} arguments.";
+            let error_msg = `found ${num_args} arguments, but expected ${1+num_args}, ${2+num_args*2}, ${3+num_args*2}, or ${3+num_args*2 + 1} arguments.`;
             new Error(error_msg);
         }
 
-        return new Action(type, ease, start_time, end_time, start_val, end_val);
+        return new Action(type, ease, start_time, end_time, start_val, end_val, undefined, ease_function);
     }
 }
 
 // Sprite class is for images with actual images to work with
-export class Sprite extends Image {
-    constructor(readonly image_file: string) {
+export class Sprite extends GameImage {
+    private prev_x: number; private prev_y: number; private prev_scx: number; private prev_scy: number; private prev_rad: number; private prev_opac: number
+    constructor(readonly image: HTMLImageElement) {
         super();
+        this.prev_x = 0;
+        this.prev_y = 0;
+        this.prev_scx = 1;
+        this.prev_scy = 1;
+        this.prev_rad = 0;
+        this.prev_opac = 1;
     }
     
-    draw(time: number) {
+    draw(time: number, ctx: CanvasRenderingContext2D, sf: number) {
+        let has_action = false;
+        let x = this.prev_x, y = this.prev_y, scx = this.prev_scx, scy = this.prev_scy, rad = this.prev_rad, opac = this.prev_opac;
+        for (var i = 0; i < this.actions.length; i++) {
+            let curr_action: Action = this.actions[i]
+            // since the action is ordered by start time, the moment the time value goes below the current action's start time, we can end the loop because the remaining actions will be greater
+            if (time < curr_action.start_time) {
+                break;
+            }
 
+            // only concerned with the actions that takes place on time
+            if (curr_action.start_time <= time && time <= curr_action.end_time ) {
+                has_action = true;
+                let type = curr_action.type
+                // move the object
+                if (type.substring(0, 4) === "Move") {
+                    let val: number[] = <number[]> curr_action.get_value(time);
+
+                    if (val.length === 1) {
+                        if (type.substring(4, 5) === "X") {
+                            x = val[0]
+                            this.prev_x = x;
+                        }
+                        else {
+                            y = val[0]
+                            this.prev_y = y;
+                        }
+                    } else {
+                        x = val[0] * sf;
+                        y = val[1] * sf;
+
+                        this.prev_x = x;
+                        this.prev_y = y;
+                    }
+                }
+
+                if (type.substring(0, 5) === "Scale") {
+                    let val: number[] = <number[]> curr_action.get_value(time);
+
+                    scx = val[0] * sf;
+                    scy = val[0] * sf;
+
+                    this.prev_scx = scx
+                    this.prev_scy = scy
+                }
+
+                if (type.substring(0, 6) === "Rotate") {
+                    let val: number[] = <number[]> curr_action.get_value(time);
+
+                    rad = val[0] * sf;
+
+                    this.prev_rad = rad;
+                }
+
+                if (type.substring(0, 6) === "Vector") {
+                    let val: number[] = <number[]> curr_action.get_value(time);
+
+                    if (val.length === 1) {
+                        if (type.substring(6, 7) === "X") {
+                            scx = val[0] * sf;
+                            this.prev_scx = scx
+                        }
+                        else {
+                            scy = val[0] * sf;
+                            this.prev_scy = scy
+                        }
+                    } else {
+                        scx = val[0] * sf;
+                        scy = val[1] * sf;
+
+                        this.prev_scx = scx
+                        this.prev_scy = scy
+                    }
+                }
+
+                if (type.substring(0, 4) === "Fade") {
+                    let val: number[] = <number[]> curr_action.get_value(time);
+
+                    opac = val[0] * sf;
+                }
+            }
+        }
+
+        if (has_action) {
+            // adjust the context so that the image will be drawn properly
+            ctx.setTransform(scx, 0, 0, scy, x, y);
+            if (rad > 0) {
+                ctx.rotate(rad);
+            }
+            if (opac < 1) {
+                ctx.globalAlpha = opac
+            }
+            ctx.drawImage(this.image, -this.image.width / 2, -this.image.height / 2);
+
+            // reset the context to ensure the next one will be drawn properly
+            ctx.transform(1, 0, 0, 1, 0, 0)
+            if (opac < 1) {
+                ctx.globalAlpha = 1
+            }
+        }
     }
 }
 
 // Vector class is intended for images that is dynamically drawn
-export class Vector extends Image {
-    constructor() {
+export class Vector extends GameImage {
+    constructor(readonly draw_base: (ctx: CanvasRenderingContext2D) => void) {
         super();
     }
     
-    draw(time: number) {
+    draw(time: number, ctx: CanvasRenderingContext2D) {
 
     }
 }
@@ -242,11 +803,11 @@ export class Vector extends Image {
 //  - start_value: the value the action begins on
 //  - end_value: the value the action ends up on after the transformation
 //  - transformation: the function that, given t within [0,1] denoting the distance between start_time and end_time the current time rests on, returns appropriate value for the current time based on action type
+//  - ease_function: given t, returns new t that follows the ease function given by either the user or list of basic ease functions
 export class Action {
-    constructor(readonly type: ActionType, readonly ease: Ease, readonly start_time: number, readonly end_time: number, start_value: Array<number> = [0], end_value: Array<number> = [0], readonly transformation: (t: number) => Array<number> = function(t: number) { return [] }, readonly ease_function: (t: number) => number = function(t: number) { return 0 }) {
-
+    constructor(readonly type: ActionType, readonly ease: Ease, readonly start_time: number, readonly end_time: number, start_value: Array<number> = [0], end_value: Array<number> = [0], readonly transformation: (t: number) => Array<number> | undefined = function(t: number) { return undefined }, readonly ease_function: (t: number) => number = function(t: number) { return 0 }) {
         // If it's a linear movement from start to end value, figure out the transformation function based on that
-        if (this.transformation(0).length > 0) {
+        if (this.transformation(0) === undefined) {
             this.transformation = (t: number) => {
                 let new_values = [];
 
@@ -255,7 +816,7 @@ export class Action {
                     new_values.push(c * t + start_value[i]);
                 }
 
-                return new_values
+                return new_values;
             }
         }
 
@@ -265,19 +826,23 @@ export class Action {
         }
     }
 
-    //Given the time, return the value the image should be at.  For example, the move action will return the x and y location of the image
+    // Given the time, return the value the image should be at.  For example, the move action will return the x and y location of the image of given time
     get_value(t: number) {
         // first check if the number is within start and end and raise error otherwise
         if (!(this.start_time < t && t < this.end_time)) {
-            new Error("${t} is not between ${this.start_time} and ${this.end_time}");
+            new Error(`${t} is not between ${this.start_time} and ${this.end_time}`);
         }
-
         // get the % represention of t
         let percentage = (t - this.start_time) / (this.end_time - this.start_time);
+
+        if (this.end_time === this.start_time) {
+            percentage = 0
+        }
 
         // adjust percentage based on the easing function
         let new_t = this.ease_function(percentage);
 
+        // use the transformation function to calculate the value
         return this.transformation(new_t);
     }
 }
@@ -408,7 +973,7 @@ export class EaseFunction {
 
             case Ease.ExpIn:
                 func = (t: number) => {
-                    if (t == 0) {
+                    if (t === 0) {
                         return 0
                     }
                     else {
@@ -418,7 +983,7 @@ export class EaseFunction {
                 break;
             case Ease.ExpOut:
                 func = (t: number) => {
-                    if (t == 1) {
+                    if (t === 1) {
                         return 1
                     }
                     else {
@@ -429,10 +994,10 @@ export class EaseFunction {
             case Ease.ExpInOut:
                 func = (t: number) => {
                     t *= 2
-                    if (t == 0) {
+                    if (t === 0) {
                         return 0
                     }
-                    else if (t == 2) {
+                    else if (t === 2) {
                         return 1
                     }
                     else if (t < 1) {
@@ -590,25 +1155,25 @@ export enum Ease {
 
 // ActionType enum is list of all actions an image can perform
 export enum ActionType {
-    Move,
-    Fade,
-    Scale,
-    Rotate,
-    Color,
-    MoveX,
-    MoveY,
-    Vector,
-    VectorX,
-    VectorY,
+    Move = "Move",
+    Fade = "Fade",
+    Scale = "Scale",
+    Rotate = "Rotate",
+    Color = "Color",
+    MoveX = "MoveX",
+    MoveY = "MoveY",
+    Vector = "Vector",
+    VectorX = "VectorX",
+    VectorY = "VectorY",
 
-    MoveF,
-    FadeF,
-    ScaleF,
-    RotateF,
-    ColorF,
-    MoveXF,
-    MoveYF,
-    VectorF,
-    VectorXF,
-    VectorYF,
+    MoveF = "MoveF",
+    FadeF = "FadeF",
+    ScaleF = "ScaleF",
+    RotateF = "RotateF",
+    ColorF = "ColorF",
+    MoveXF = "MoveXF",
+    MoveYF = "MoveYF",
+    VectorF = "VectorF",
+    VectorXF = "VectorXF",
+    VectorYF = "VectorYF",
 }

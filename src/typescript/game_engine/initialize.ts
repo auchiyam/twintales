@@ -1,5 +1,3 @@
-import { State } from "./state"
-
 function get_resolution() {
     // get the resolution of the current browser window
     let width = window.innerWidth
@@ -39,7 +37,7 @@ function get_resolution() {
     return { width: canv_width, height: canv_height }
 }
 
-function resize_canvas(cv: HTMLCanvasElement) {
+export function resize_canvas(cv: HTMLCanvasElement) {
     let resolution = get_resolution();
 
     cv.width = resolution.width;
@@ -56,9 +54,6 @@ export function initialize() {
     resize_canvas(canvas);
 
     canvas.id = "game_canvas"
-
-    //create a handler for resizing
-    window.addEventListener("resize", function() { resize_canvas(<HTMLCanvasElement> document.getElementById("game_canvas")) })
 
     document.body.appendChild(canvas);
 
