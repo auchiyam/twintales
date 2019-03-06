@@ -1,6 +1,5 @@
 import { Game } from './game';
 import { State } from '../game_engine/state';
-import firebase from '../data/database';
 
 // handles everything in the title screen
 export class TitleScreen extends Game {
@@ -19,18 +18,6 @@ export class TitleScreen extends Game {
 
     async initialize() {
         // load all images
-        let db = firebase.firestore();
-        let ref = db.collection("assets/title_screen");
-
-        let images = await ref.get();
-
-        images.forEach((val) => {
-            let files = val.data()
-
-            
-        });
-
-
 
         // wait until all images are fully loaded
     }
