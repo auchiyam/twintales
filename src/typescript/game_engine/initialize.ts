@@ -1,5 +1,3 @@
-import { State } from "./state"
-
 function get_resolution() {
     // get the resolution of the current browser window
     let width = window.innerWidth
@@ -39,7 +37,7 @@ function get_resolution() {
     return { width: canv_width, height: canv_height }
 }
 
-function resize_canvas(cv: HTMLCanvasElement) {
+export function resize_canvas(cv: HTMLCanvasElement) {
     let resolution = get_resolution();
 
     cv.width = resolution.width;
@@ -49,7 +47,7 @@ function resize_canvas(cv: HTMLCanvasElement) {
 // create a canvas and add it to the index.html
 export function initialize() {
     // initialize the canvas
-    var canvas = document.createElement("canvas");
+    let canvas = document.createElement("canvas");
 
     canvas.style.setProperty('background-color', '#eee');
 
@@ -57,11 +55,7 @@ export function initialize() {
 
     canvas.id = "game_canvas"
 
-    //create a handler for resizing
-    window.addEventListener("resize", function() { resize_canvas(<HTMLCanvasElement> document.getElementById("game_canvas")) })
-
     document.body.appendChild(canvas);
 
-    // the initialization is complete, proceed to loading
-    return State.Loading;
+    return canvas;
 }
