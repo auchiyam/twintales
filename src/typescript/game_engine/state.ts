@@ -10,15 +10,17 @@ export enum State {
 
 export class GameState {
     readonly start_time: number;
+    readonly canvas: HTMLCanvasElement
     readonly context: CanvasRenderingContext2D;
 
     time: number;
     images: GameImage[][]
 
-    constructor(readonly canvas: HTMLCanvasElement) {
+    constructor() {
         this.start_time = Date.now();
         this.time = 0;
-        this.context = <CanvasRenderingContext2D> canvas.getContext("2d");
+        this.canvas = <HTMLCanvasElement> document.getElementById("game_canvas");
+        this.context = <CanvasRenderingContext2D> this.canvas.getContext("2d");
 
         this.images = [];
     }

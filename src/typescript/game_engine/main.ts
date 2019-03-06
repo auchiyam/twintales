@@ -9,7 +9,7 @@ function main() {
 
     let canv = initialize();
 
-    let state = new GameState(canv);
+    let state = new GameState();
     let curr_time: number = 0;
 
     let img: HTMLImageElement = new Image();
@@ -20,13 +20,13 @@ function main() {
 
     img.onload = function() {
         let sp: Sprite = new Sprite(img);
-        sp.fade(0, 1)
+        sp.fade(0, 1);
         sp.move(0, 1920 / 2, 1080 / 2);
-        sp.scale(0, .6)
+        sp.scale(0, .6);
 
-        state.images.push([])
-        state.images[0] = []
-        state.images[0].push(sp)
+        state.images.push([]);
+        state.images[0] = [];
+        state.images[0].push(sp);
 
         draw(state);
     }
