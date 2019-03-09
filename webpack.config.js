@@ -1,7 +1,7 @@
 var path = require('path')
 
 module.exports = {
-    entry: './src/typescript/game_engine/main',
+    entry: './src/typescript/game_engine/main.ts',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
