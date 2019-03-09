@@ -23,7 +23,7 @@
         }
 
         if ($func === 'get_assets') {
-            echo "hey this is a test"
+            echo "hey this is a test";
         }
 
         if ($func === 'get_ranking') {
