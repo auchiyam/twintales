@@ -14,7 +14,7 @@ function main() {
 
     let img: HTMLImageElement = new Image();
 
-    img.src = "https://utohime.cc/assets/test_assets/akane_chan.png"
+    img.src = "http://utohime.cc/assets/test_assets/akane_chan.png"
 
     window.addEventListener("resize", function() { resize_canvas(<HTMLCanvasElement> document.getElementById("game_canvas")); draw(state) })
 
