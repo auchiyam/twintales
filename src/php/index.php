@@ -44,7 +44,7 @@
             // extract info
             extract($row);
 
-            $asset = $location
+            $asset = $location;
 
             $json_value['assets'][$name] = $asset;
         }
