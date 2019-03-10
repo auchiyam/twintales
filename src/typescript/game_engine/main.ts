@@ -11,16 +11,14 @@ async function main() {
 
     let canv = initialize();
 
-    let state = new GameState(canv);
+    let state = new GameState();
     let curr_time: number = 0;
 
     let img: HTMLImageElement = new Image();
 
     let val = await get_assets("images", "test_assets");
 
-    console.log(val)
-
-    img.src = `${val.assets.akane_chan}`
+    img.src = `${val.assets.akane_chan}`;
 
     window.addEventListener("resize", function() { resize_canvas(<HTMLCanvasElement> document.getElementById("game_canvas")); draw(state) })
 
