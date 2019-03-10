@@ -9,7 +9,7 @@
     $pass = "password";
 
     // get the function and arguments
-    $func = $_GET['func'];
+    extract($_GET);
 
     // create connection to the mysql
     $conn = null;
@@ -24,9 +24,7 @@
     // get all the assets for the given argument
     if ($func === 'get_assets') {
         // execute the mysql 
-        $f_type = $_GET['f_type'];
-        $a_type = $_GET['a_type']
-        $sql = "select * from asset where asset.asset_type = ". $f_type . ", asset.file_type = " . $a_type;
+        $sql = "select * from asset where asset.asset_type=\"". $a_type . "\" and asset.file_type=\"" . $f_type . "\"";
 
         $statement = $conn->prepare($sql);
 
@@ -54,10 +52,7 @@
 
             http_response_code(200);
 
-            echo json_encode($json_value)
-        }
-        else {
-            echo "couldn't find anything";
+            echo json_encode($json_value);
         }
     }
 
