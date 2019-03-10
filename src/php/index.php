@@ -37,6 +37,7 @@
         // create the array that will be used to make json with
         $json_value = array();
         $json_value['count'] = $count;
+        $json_value['assets'] = array();
 
         // loop all the contents
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -48,7 +49,7 @@
                 "location" => $location
             );
 
-            array_push($json_value, $asset);
+            array_push($json_value['assets'], $asset);
         }
 
         // respond with success code and return the json value
