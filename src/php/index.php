@@ -49,7 +49,7 @@
                 "location" => $location
             );
 
-            array_push($json_value['assets'], $asset);
+            $json_value['assets'][$name] = $asset
         }
 
         // respond with success code and return the json value
