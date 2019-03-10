@@ -25,18 +25,20 @@
 
     // get all the assets for the given argument
     if ($func === 'get_assets') {
-        // execute the mysql query
-        $sql = "select * from asset where asset.asset_type=\"". $a_type . "\" and asset.file_type=\"" . $f_type . "\"";
+        // execute the mysql query if it's not all
+        if ($f_type !== "all") {
+            $sql = "select * from asset where asset.asset_type=\"". $a_type . "\" and asset.file_type=\"" . $f_type . "\"";
+        }
+        else {
+            $sql = "select * from asset where asset.asset_type=\"". $a_type . "\"";
+        }
 
         $statement = $conn->prepare($sql);
 
         $statement->execute();
 
-        $count = $statement->rowCount();
-
         // create the array that will be used to make json with
         $json_value = array();
-        $json_value['count'] = $count;
         $json_value['assets'] = array();
 
         // loop all the contents
@@ -46,7 +48,12 @@
 
             $asset = $location;
 
-            $json_value['assets'][$name] = $asset;
+            // if there's no array for the type, make one
+            if ($json_value['assets'].property_exists($file_type)) {
+                $json_value['assets'][$file_type] = array();
+            }
+
+            $json_value['assets'][$file_type][$name] = $location;
         }
 
         // respond with success code and return the json value
