@@ -2,19 +2,25 @@ import { initialize, resize_canvas } from "./initialize";
 import { GameState } from "./state";
 import { draw } from "./draw_canvas";
 
-import { Sprite } from "./image"
+import { Sprite } from "./image";
 
-function main() {
+import { get_assets } from "../api/api"
+
+async function main() {
     let done = false;
 
     let canv = initialize();
 
-    let state = new GameState();
+    let state = new GameState(canv);
     let curr_time: number = 0;
 
     let img: HTMLImageElement = new Image();
 
-    img.src = "http://utohime.cc/assets/test_assets/images/akane_chan.png"
+    let val = await get_assets("images", "test_assets");
+
+    console.log(val)
+
+    img.src = `${val.assets.akane_chan}`
 
     window.addEventListener("resize", function() { resize_canvas(<HTMLCanvasElement> document.getElementById("game_canvas")); draw(state) })
 
