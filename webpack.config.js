@@ -1,7 +1,7 @@
 var path = require('path')
 
 module.exports = {
-    entry: ['babel-polyfill', './src/typescript/game_engine/main'],
+    entry: ['babel-polyfill', './src/typescript/main'],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
