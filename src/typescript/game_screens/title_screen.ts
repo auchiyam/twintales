@@ -226,8 +226,10 @@ export class TitleScreen extends Game {
     // dir: left, down, up, right in that order, others for initialization
     private move_cursor(dir: number) {
         let offset = dir === 0 ? -1 : 1
+        let n = this.cursor + offset
+        let m = this.options.length
 
-        this.cursor = (this.cursor + offset) % this.options.length
+        this.cursor = ((n % m) + m) % m
 
         let step = 1920 / (this.options.length + 1)
 
