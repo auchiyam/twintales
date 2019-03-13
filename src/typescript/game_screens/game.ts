@@ -1,7 +1,7 @@
-import { GameState } from "../game_engine/state";
+import { GameImage } from "../game_engine/image"
 
 export abstract class Game {
-    constructor() {}
+    constructor(protected readonly canvas: HTMLCanvasElement, protected readonly ctx: CanvasRenderingContext2D, protected layers: GameImage[][], protected width: number, protected height: number) {}
 
     // contains all the initialization process of each game state
     // examples of things initialized:

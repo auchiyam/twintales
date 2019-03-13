@@ -39,6 +39,7 @@
 
         // create the array that will be used to make json with
         $json_value = array();
+        $json_value['count'] = $statement->rowCount();
         $json_value['assets'] = array();
 
         // loop all the contents
@@ -46,10 +47,19 @@
             // extract info
             extract($row);
 
-            $asset = $location;
+	    $asset = $location;
+
+	    $has_key = false;
+
+	    foreach (array_keys($json_values['assets']) as &$k) {
+		    if ($k === $f_type) {
+			    $has_key = true;
+			    break;
+		    }
+	    }
 
             // if there's no array for the type, make one
-            if ($json_value['assets'].property_exists($file_type)) {
+            if ($has_key) {
                 $json_value['assets'][$file_type] = array();
             }
 

@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Aleo';
+    font-size: 'normal';
+    font-weight: 400;
+    src: url(http://utohime.cc/assets/fonts/aleo/Regular/aleo-regular-webfont.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Aleo';
+    font-size: 'bold';
+    font-weight: 700;
+    src: url(http://utohime.cc/assets/fonts/aleo/Bold/aleo-bold-webfont.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Aleo';
+    font-size: 'light';
+    font-weight: 200;
+    src: url(http://utohime.cc/assets/fonts/aleo/Light/aleo-light-webfont.woff2) format('woff2');
+}
