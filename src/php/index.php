@@ -49,10 +49,10 @@
 
 	        $asset = $location;
 
-    	    $has_key = false;
-
+            $has_key = false;
+            
 	        foreach (array_keys($json_value['assets']) as $k) {
-		        if ($k === $f_type) {
+		        if ($k === $file_type) {
 			        $has_key = true;
 			        break;
 		        }
