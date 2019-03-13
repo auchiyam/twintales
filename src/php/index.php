@@ -59,7 +59,7 @@
 	        }
 
             // if there's no array for the type, make one
-            if ($has_key) {
+            if (!$has_key) {
                 $json_value['assets'][$file_type] = array();
             }
 

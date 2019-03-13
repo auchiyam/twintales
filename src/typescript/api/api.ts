@@ -15,7 +15,7 @@ export function get_ranking() {
 }
 
 function access_api(func: string, arg: string) {
-    let url = `http://api.utohime.cc/${func}/${arg}`;
+    let url = `http://api.utohime.cc/${func}/${arg}`    
 
     let data = '';
 
