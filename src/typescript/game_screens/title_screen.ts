@@ -87,20 +87,6 @@ export class TitleScreen extends Game {
                     }
                     key_held.push(0)
                     break;
-                case "Down":
-                case "ArrowDown":
-                    if (!key_held.includes(1)) {
-                        this.move_cursor(1)
-                    }
-                    key_held.push(1)
-                    break;
-                case "Up":
-                case "ArrowUp":
-                    if (!key_held.includes(2)) {
-                        this.move_cursor(2)
-                    }
-                    key_held.push(2)
-                    break;
                 case "Right":
                 case "ArrowRight":
                     if (!key_held.includes(3)) {
@@ -121,14 +107,6 @@ export class TitleScreen extends Game {
                 case "Left":
                 case "ArrowLeft":
                     v = 0
-                    break;
-                case "Down":
-                case "ArrowDown":
-                    v = 1
-                    break;
-                case "Up":
-                case "ArrowUp":
-                    v = 2
                     break;
                 case "Right":
                 case "ArrowRight":
@@ -247,94 +225,9 @@ export class TitleScreen extends Game {
 
     // dir: left, down, up, right in that order, others for initialization
     private move_cursor(dir: number) {
-        // move the cursor based on the current cursor location and the direction of key pressed
-        switch (this.cursor) {
-            // Start
-            case (0):
-                switch (dir) {
-                    case (0):
-                        this.cursor = 4
-                        break;
-                    case (1):
-                        this.cursor = 3
-                        break;
-                    case (2):
-                        this.cursor = 3
-                        break;
-                    case (3):
-                        this.cursor = 1
-                        break;
-                }
-                break;
-            // Practice
-            case (1):
-                switch (dir) {
-                    case (0):
-                        this.cursor = 0
-                        break;
-                    case (1):
-                        this.cursor = 3              
-                        break;
-                    case (2):
-                        this.cursor = 3
-                        break;
-                    case (3):
-                        this.cursor = 2
-                        break;
-                }
-                break;
-            // Replay
-            case (2):
-                switch (dir) {
-                    case (0):
-                        this.cursor = 1
-                        break;
-                    case (1):
-                        this.cursor = 4
-                        break;
-                    case (2):
-                        this.cursor = 4
-                        break;
-                    case (3):
-                        this.cursor = 3
-                        break;
-                }
-                break;
-            // Ranking
-            case (3):
-                switch (dir) {
-                    case (0):
-                        this.cursor = 2
-                        break;
-                    case (1):
-                        this.cursor = 0
-                        break;
-                    case (2):
-                        this.cursor = 0
-                        break;
-                    case (3):
-                        this.cursor = 4
-                        break;
-                }
-                break;
-            // Option
-            case (4):
-                switch (dir) {
-                    case (0):
-                        this.cursor = 3
-                        break;
-                    case (1):
-                        this.cursor = 2
-                        break;
-                    case (2):
-                        this.cursor = 2
-                        break;
-                    case (3):
-                        this.cursor = 0
-                        break;
-                }
-                break;
-        }
+        let offset = dir === 0 ? -1 : 1
+
+        this.cursor = (this.cursor + offset) % this.options.length
 
         let step = 1920 / (this.options.length + 1)
 
