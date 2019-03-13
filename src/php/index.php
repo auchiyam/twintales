@@ -51,7 +51,7 @@
 
     	    $has_key = false;
 
-	        foreach (array_keys($json_values['assets']) as &$k) {
+	        foreach (array_keys($json_value['assets']) as $k) {
 		        if ($k === $f_type) {
 			        $has_key = true;
 			        break;
