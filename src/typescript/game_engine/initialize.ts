@@ -59,3 +59,5 @@ export function initialize() {
 
     return canvas;
 }
+
+export var initialized = false;
