@@ -71,9 +71,7 @@ export class TitleScreen extends Game {
             this.width = this.canvas.width;
             this.height = this.canvas.height;
         })
-
-        let key_held: number[] = [];
-
+        
         window.addEventListener("keydown", (e) => {
             e = e || window.event;
 
@@ -82,41 +80,16 @@ export class TitleScreen extends Game {
             switch (key) {
                 case "Left":
                 case "ArrowLeft":
-                    if (!key_held.includes(0)) {
-                        this.move_cursor(0)
-                    }
-                    key_held.push(0)
+                    this.move_cursor(0)
                     break;
                 case "Right":
                 case "ArrowRight":
-                    if (!key_held.includes(3)) {
-                        this.move_cursor(3)
-                    }
-                    key_held.push(3)
+                    this.move_cursor(3)
                     break;
                 case "Enter":
                     this.selected = true;
                     break;
             }
-        });
-
-        window.addEventListener("keyup", (e) => {
-            let v: number;
-
-            switch (e.key) {
-                case "Left":
-                case "ArrowLeft":
-                    v = 0
-                    break;
-                case "Right":
-                case "ArrowRight":
-                    v = 3
-                    break;
-            }
-
-            key_held = key_held.filter((val) => {
-                return val != v
-            })
         });
 
         // main loop
