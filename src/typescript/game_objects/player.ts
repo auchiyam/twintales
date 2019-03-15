@@ -43,15 +43,26 @@ export class Player extends GameObject {
     update(dt: number) {
         let offset_rad = Math.PI * (dt / 1000.0) // do half a circle every second
         let off_x = 0, off_y = 0
+        let direction = this.direction
 
         let angles = [-5/4, -6/4, -7/4, -1, -1, -0, -3/4, -2/4, -1/4].map((val) => {return val * Math.PI})
 
-        if (this.direction !== 5) {
-            let angle = angles[this.direction - 1];
+        if (direction !== 5) {
+            let angle = angles[direction - 1];
             let speed = 1920.0 / 2000.0
 
             off_x = speed * Math.cos(angle)
             off_y = speed * Math.sin(angle)
+        }
+
+        // if it goes out of bounds, get rid of offset
+        // if x goes below
+        if ((!(20 < this.x) && (direction % 3 === 1)) || (!(this.x < 1900) && (direction % 3 == 0))) {
+            off_x = 0
+        }
+
+        if ((!(20 < this.y) && (Math.floor(direction/3) === 2)) || (!(this.y < 1060) && (Math.floor(direction/3) / 3 == 0))) {
+            off_y = 0
         }
 
         // update the current status
@@ -101,10 +112,17 @@ export class Player extends GameObject {
                         held_down.push(3)
                     }
                     break;
-                
-                
+                // shoot
+                case "z":
                 case "Z":
                     
+                    break;
+                case "Shift":
+
+                    break;
+                case "x":
+                case "X":
+
                     break;
             }
         });
