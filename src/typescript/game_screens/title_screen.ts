@@ -2,7 +2,7 @@ import { Game } from './game';
 import { State } from '../game_engine/state';
 import { get_assets } from '../api/api'
 import { Sprite, GameImage, DynamicSprite } from '../game_engine/image';
-import { sleep, measureTextHeight } from '../game_engine/general';
+import { sleep, measureTextHeight, frame_interval } from '../game_engine/general';
 import { draw } from '../game_engine/draw_canvas'
 import { resize_canvas } from '../game_engine/initialize';
 
@@ -15,7 +15,7 @@ export class TitleScreen extends Game {
     private options: string[] = ["Start", "Practice", "Replay", "Ranking", "Option"];
 
     constructor(canvas: HTMLCanvasElement) {
-        super(canvas, <CanvasRenderingContext2D> canvas.getContext("2d"), [], canvas.width, canvas.height);
+        super(canvas);
 
         this.cursor = 0;
         this.selected = false;
@@ -56,7 +56,7 @@ export class TitleScreen extends Game {
             // get all the music: TODO
             // .. logic ..
         // after all the images are loaded, draw the title page
-        }).then(resolve => {
+        }).then(() => {
             this.layers.push([]);                   // background layer
             this.layers.push(this.draw_cursor());   // cursor layer
             this.layers.push(this.draw_title());    // foreground layer
@@ -71,7 +71,7 @@ export class TitleScreen extends Game {
             this.width = this.canvas.width;
             this.height = this.canvas.height;
         })
-        
+
         window.addEventListener("keydown", (e) => {
             e = e || window.event;
 
@@ -122,7 +122,7 @@ export class TitleScreen extends Game {
             }
 
             // if everything finished before the designated time, take a break
-            let sleep_time = 17 - (window.performance.now() - beginning_loop)
+            let sleep_time = frame_interval - (window.performance.now() - beginning_loop)
 
             if (sleep_time > 0) {
                 await sleep(sleep_time);
@@ -130,6 +130,24 @@ export class TitleScreen extends Game {
 
             // now that the loop finished, update the curr_time for the next loop
             subtime = window.performance.now() - sub_beginning
+        }
+
+        switch (this.cursor) {
+            case (0):
+                this.next_state = State.PlayGame
+                break;
+            case (1):
+                this.next_state = State.PracticeStages
+                break;
+            case (2):
+                this.next_state = State.Replay
+                break;
+            case (3):
+                this.next_state = State.Ranking
+                break;
+            case (4):
+                this.next_state = State.Option
+                break;
         }
 
         // return the new state so that main can redirect the user there

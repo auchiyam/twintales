@@ -1,7 +1,16 @@
 import { GameImage } from "../game_engine/image"
 
 export abstract class Game {
-    constructor(protected readonly canvas: HTMLCanvasElement, protected readonly ctx: CanvasRenderingContext2D, protected layers: GameImage[][], protected width: number, protected height: number) {}
+    protected readonly ctx: CanvasRenderingContext2D
+    protected width: number
+    protected height: number
+    protected layers: GameImage[][]
+    constructor(protected readonly canvas: HTMLCanvasElement) {
+        this.ctx = <CanvasRenderingContext2D> canvas.getContext("2d")
+        this.width = canvas.width
+        this.height = canvas.height
+        this.layers = []
+    }
 
     // contains all the initialization process of each game state
     // examples of things initialized:

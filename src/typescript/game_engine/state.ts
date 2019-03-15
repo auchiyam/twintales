@@ -5,6 +5,8 @@ export enum State {
     TitleScreen,        // The initial state of the game
     PlayGame,           // The game start has been selected, and the prologue should be displayed
     PracticeStages,     // The practice stage has been selected, and the practice stage sequence should be displayed
+    Replay,
+    Ranking,
     Option,             // The option has been selected, and the option should be displayed
 }
 

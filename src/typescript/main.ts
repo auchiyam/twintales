@@ -7,6 +7,7 @@ import { Sprite } from "./game_engine/image";
 import { get_assets } from "./api/api"
 import { sleep } from './game_engine/general'
 import { TitleScreen } from "./game_screens/title_screen";
+import { PlayGame } from "./game_screens/play_game";
 
 async function main_test(canv?: HTMLCanvasElement) {
     let done = false;
@@ -85,6 +86,10 @@ async function main() {
                 await title.initialize();
                 curr_state = await title.start();
                 break;
+            case (State.PlayGame):
+                let play = new PlayGame(canvas);
+                await play.initialize();
+                curr_state = await play.start()
             default:
                 await main_test(canvas)
                 done = true
