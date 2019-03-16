@@ -11,11 +11,13 @@ export class PlayGame extends Game {
     public player!: Player
     public shoot: boolean
     public id_count = 0
+    public direction: number[]
     constructor(canvas: HTMLCanvasElement) {
         super(canvas)
         this.objects = []
         this.layers.push([])
         this.shoot = false
+        this.direction = []
     }
 
     initialize() {
@@ -49,9 +51,7 @@ export class PlayGame extends Game {
         let frame_count = 0
 
         while (!done) {
-            dt = window.performance.now() - prev
-            prev = window.performance.now()            
-
+            // add shots ever 3 frames if the shoot button is being held
             if (this.shoot && frame_count % 3 == 0) {
                 let p_bullet = new PlayerBullet([], () => {
                     let i = 0
@@ -72,14 +72,40 @@ export class PlayGame extends Game {
                 this.layers[0].push(p_bullet.image)
             }
 
+            // update the direction the player is going
+            var horizontal: number = 0, vertical: number = 0
+            for (var j of this.direction) {
+                switch (j) {
+                    case (0):
+                        horizontal = -1
+                        break;
+                    case (1):
+                        vertical = -3
+                        break;
+                    case (2):
+                        vertical = 3
+                        break;
+                    case (3):
+                        horizontal = 1
+                }
+            }
+
+            this.player.direction = 5 + horizontal + vertical
+
+            dt = window.performance.now() - prev
+            prev = window.performance.now()
+
+            // update all the objects
             for (var i of this.objects) {
                 i.update(dt)
             }
 
+            // run through the engine
             Promise.all([
                 draw(0, this.ctx, this.layers, this.width, this.height)
             ])
 
+            // if the loop executed everything fast enough, take a break
             sleep_time = frame_interval - (window.performance.now() - prev)
 
             if (sleep_time > 0) {
@@ -103,33 +129,29 @@ export class PlayGame extends Game {
                 // held down: 0
                 case "Left":
                 case "ArrowLeft":
-                    if (!held_down.includes(0)) {
-                        this.player.direction -= 1;
-                        held_down.push(0)
+                    if (!this.direction.includes(0)) {
+                        this.direction.push(0)
                     }
                     break;
                 // held down: 1
                 case "Down":
                 case "ArrowDown":
-                    if (!held_down.includes(1)) {
-                        this.player.direction -= 3;
-                        held_down.push(1)
+                    if (!this.direction.includes(1)) {
+                        this.direction.push(1)
                     }
                     break;
                 // held down: 2
                 case "Up":
                 case "ArrowUp":
-                    if (!held_down.includes(2)) {
-                        this.player.direction += 3;
-                        held_down.push(2)
+                    if (!this.direction.includes(2)) {
+                        this.direction.push(2)
                     }
                     break;
                 // held down: 3
                 case "Right":
                 case "ArrowRight":
-                    if (!held_down.includes(3)) {
-                        this.player.direction += 1;
-                        held_down.push(3)
+                    if (!this.direction.includes(3)) {
+                        this.direction.push(3)
                     }
                     break;
                 // held down: 4
@@ -161,30 +183,26 @@ export class PlayGame extends Game {
             switch (key) {
                 case "Left":
                 case "ArrowLeft":
-                    if (held_down.includes(0)) {
-                        this.player.direction += 1;
-                        held_down = held_down.filter((val) => {return val !== 0})
+                    if (this.direction.includes(0)) {
+                        this.direction = this.direction.filter((val) => {return val !== 0})
                     }
                     break;
                 case "Down":
                 case "ArrowDown":
-                    if (held_down.includes(1)) {
-                        this.player.direction += 3;
-                        held_down = held_down.filter((val) => {return val !== 1})
+                    if (this.direction.includes(1)) {
+                        this.direction = this.direction.filter((val) => {return val !== 1})
                     }
                     break;
                 case "Up":
                 case "ArrowUp":
-                    if (held_down.includes(2)) {
-                        this.player.direction -= 3;
-                        held_down = held_down.filter((val) => {return val !== 2})
+                    if (this.direction.includes(2)) {
+                        this.direction = this.direction.filter((val) => {return val !== 2})
                     }
                     break;
                 case "Right":
                 case "ArrowRight":
-                    if (held_down.includes(3)) {
-                        this.player.direction -= 1;
-                        held_down = held_down.filter((val) => {return val !== 3})
+                    if (this.direction.includes(3)) {
+                        this.direction = this.direction.filter((val) => {return val !== 3})
                     }
                     break;
                 case "z":

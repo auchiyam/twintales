@@ -3,19 +3,31 @@ import { DynamicSprite } from "../game_engine/image";
 
 export abstract class Bullet extends GameObject {
     private t: number
+    protected use_dt: boolean
     constructor(
         hitbox: number[][],
         destroy: () => void,
-        id: number
+        id: number,
+        use_dt?: boolean
     ) {
         super(hitbox, destroy, id)
         this.t = 0
+        if (use_dt === undefined) {
+            this.use_dt = false
+        } else {
+            this.use_dt = use_dt
+        }
     }
 
     abstract transform(t: number) : void
 
     update(dt: number) {
-        this.transform(this.t + dt)
+        if (!this.use_dt) {
+            this.transform(this.t + dt)
+        }
+        else {
+            this.transform(dt)
+        }
 
         this.t += dt
     }
@@ -25,7 +37,7 @@ export class PlayerBullet extends Bullet {
     constructor(hitbox: number[][], destroy: () => void, id: number,
         x: number, y: number, 
     ) {
-        super(hitbox, destroy, id)
+        super(hitbox, destroy, id, true)
         this.x = x
         this.y = y
     }
@@ -53,7 +65,7 @@ export class PlayerBullet extends Bullet {
     }
 
     async transform(t: number) {
-        let speed = 1920.0 / 3000.0
+        let speed = 1920.0 / 1000.0
 
         if (this.x > 1980) {
             await this.destroy()
